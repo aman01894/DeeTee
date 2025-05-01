@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".StartProcessActivity">
+    <LinearLayout
+        android:layout_weight="1.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/black">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_above="@+id/rr_ExitView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                        <RelativeLayout
+                            android:id="@+id/rr_companyName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+                            <ImageView
+                                android:id="@+id/img_logo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/deetee_logo"/>
+                            <TextView
+                                android:layout_toRightOf="@+id/img_logo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/dm_bold"
+                                android:textSize="14dp"
+                                android:text="DeeTee Industries Pvt. Ltd."/>
+                        </RelativeLayout>
+                        <View
+                            android:id="@+id/view1"
+                            android:layout_below="@+id/rr_companyName"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/hint_color"/>
+
+                        <RelativeLayout
+                            android:id="@+id/rr_operatorName"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/view1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:id="@+id/txtOperator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/hint_color"
+                                android:fontFamily="@font/dm_medium"
+                                android:textSize="14dp"
+                                android:text="Operator Details"/>
+
+                            <RelativeLayout
+                                android:layout_below="@+id/txtOperator"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:elevation="12dp"
+                                    android:layout_marginTop="10dp"
+                                    android:id="@+id/userImage"
+                                    app:cardCornerRadius="40dp">
+                                    <ImageView
+                                        android:layout_height="50dp"
+                                        android:layout_width="match_parent"
+                                        android:id="@+id/imageView1"
+                                        android:src="@drawable/user_img"
+                                        android:scaleType="centerCrop"/>
+                                </androidx.cardview.widget.CardView>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toRightOf="@+id/userImage"
+                                    >
+                                    <TextView
+                                        android:id="@+id/txt_operatorName"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:fontFamily="@font/dm_bold"
+                                        android:textSize="14dp"
+                                        android:text="Rakesh Dhule"/>
+                                    <TextView
+                                        android:id="@+id/txt_operatorPost"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_below="@+id/txt_operatorName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textColor="@color/hint_color"
+                                        android:fontFamily="@font/dm_regular"
+                                        android:textSize="14dp"
+                                        android:text="Head Technician"/>
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <View
+                            android:id="@+id/view2"
+                            android:layout_below="@+id/rr_operatorName"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/hint_color"/>
+
+                        <RelativeLayout
+                            android:id="@+id/rr_machineView"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/view2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:id="@+id/txtMachine"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/hint_color"
+                                android:fontFamily="@font/dm_medium"
+                                android:textSize="14dp"
+                                android:text="Machine Details"/>
+
+                            <RelativeLayout
+                                android:layout_below="@+id/txtMachine"
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="10dp"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:layout_height="50dp"
+                                    android:layout_width="50dp"
+                                    android:id="@+id/machineImg"
+                                    android:src="@drawable/machine_image"
+                                    android:scaleType="centerCrop"/>
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toRightOf="@+id/machineImg"
+                                    >
+                                    <TextView
+                                        android:id="@+id/txt_machineName"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:fontFamily="@font/dm_bold"
+                                        android:textSize="14dp"
+                                        android:text="DTPM #9642"/>
+                                    <TextView
+                                        android:id="@+id/txt_machineDetail"
+                                        android:layout_marginStart="10dp"
+                                        android:layout_below="@+id/txt_machineName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textColor="@color/hint_color"
+                                        android:fontFamily="@font/dm_regular"
+                                        android:textSize="14dp"
+                                        android:text="Cutting Lathe Machine 1200 Watt"/>
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <View
+                            android:id="@+id/view3"
+                            android:layout_below="@+id/rr_machineView"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@color/hint_color"/>
+
+                        <RelativeLayout
+                            android:id="@+id/rr_salesOrderView"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/view3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:id="@+id/txtOrder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/hint_color"
+                                android:fontFamily="@font/dm_medium"
+                                android:textSize="14dp"
+                                android:text="Sales Order Details"/>
+
+                            <RelativeLayout
+                                android:layout_below="@+id/txtOrder"
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="10dp"
+                                android:layout_height="wrap_content">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    >
+                                    <TextView
+                                        android:id="@+id/txt_salesOrderName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:fontFamily="@font/dm_bold"
+                                        android:textSize="14dp"
+                                        android:text="SO-II-N-230311-F"/>
+                                    <TextView
+                                        android:id="@+id/txt_orderNumber"
+                                        android:layout_below="@+id/txt_salesOrderName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textColor="@color/hint_color"
+                                        android:fontFamily="@font/dm_regular"
+                                        android:textSize="14dp"
+                                        android:text="04 Products"/>
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </ScrollView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rr_ExitView"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/view4"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/hint_color"/>
+
+                <TextView
+                    android:id="@+id/tv_Exit"
+                    android:layout_below="@+id/view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="Exit"
+                    android:padding="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="25dp"
+                    android:fontFamily="@font/dm_medium"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:background="@drawable/rounded_corner_button_red"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_light">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:id="@+id/rr_mainView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:id="@+id/txtProductD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/dm_medium"
+                            android:text="Product Details"
+                            android:textColor="@color/hint_color"
+                            android:textSize="12dp" />
+
+                        <TextView
+                            android:id="@+id/txtOperatorName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txtProductD"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/dm_medium"
+                            android:text="Tube Forming Rolls"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <RelativeLayout
+                            android:id="@+id/rr_drowing_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txtOperatorName"
+                            android:layout_marginTop="10dp">
+
+                            <TextView
+                                android:id="@+id/txt_drowingNumberView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/hint_color"
+                                android:fontFamily="@font/dm_regular"
+                                android:textSize="12dp"
+                                android:text="Drowing No."/>
+                            <TextView
+                                android:id="@+id/txt_drowingNum"
+                                android:layout_below="@+id/txt_drowingNumberView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_bold"
+                                android:textSize="12dp"
+                                android:layout_marginTop="5dp"
+                                android:text="3-DT-RMR-DOM-2017-043"/>
+                        </RelativeLayout>
+                        <LinearLayout
+                            android:id="@+id/llView_1"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/rr_drowing_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/txt_rmGrad"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="RM Grad"/>
+                                <TextView
+                                    android:id="@+id/txt_gradNum"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="H11(M)"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txt_capping"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="Cap./Non-Capping"/>
+                                <TextView
+                                    android:id="@+id/txt_cappingNum"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="n/a"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llView_2"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/llView_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/txt_labView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="Lab No."/>
+                                <TextView
+                                    android:id="@+id/txt_labNum"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="-"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txt_wdd"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="WDD"/>
+                                <TextView
+                                    android:id="@+id/txt_wDDNum"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="18-Nov-2023"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llView_3"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/llView_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/txt_qtView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="Order Qty."/>
+                                <TextView
+                                    android:id="@+id/txt_quantity"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="5"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txt_jcView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="JC Qty."/>
+                                <TextView
+                                    android:id="@+id/txt_jcQty"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="5"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llView_4"
+                            android:layout_marginTop="10dp"
+                            android:layout_below="@+id/llView_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/txt_punhView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="Roll Punch No."/>
+                                <TextView
+                                    android:id="@+id/txt_punchNumber"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="-"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txt_operation"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/hint_color"
+                                    android:fontFamily="@font/dm_regular"
+                                    android:textSize="12dp"
+                                    android:text="Special Operation"/>
+                                <TextView
+                                    android:id="@+id/txt_operationName"
+                                    android:layout_below="@+id/txt_drowingNumberView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:fontFamily="@font/dm_bold"
+                                    android:textSize="12dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="Spline"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rr_blankingDate"
+                        android:layout_below="@+id/rr_mainView"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@color/blue">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/dm_medium"
+                            android:layout_marginStart="10dp"
+                            android:textSize="12dp"
+                            android:text="Blanking Date"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/dm_medium"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:textSize="10dp"
+                            android:text="480 mins"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/rr_htDate"
+                        android:layout_below="@+id/rr_blankingDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/dm_medium"
+                            android:layout_marginStart="10dp"
+                            android:textSize="12dp"
+                            android:text="H.T. Date"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/white_border"
+                            android:layout_alignParentBottom="true"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/rr_facingDate"
+                        android:layout_below="@+id/rr_htDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/dm_medium"
+                            android:layout_marginStart="10dp"
+                            android:textSize="12dp"
+                            android:text="Face Grinding Date"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/white_border"
+                            android:layout_alignParentBottom="true"/>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/rr_centringDate"
+                        android:layout_below="@+id/rr_facingDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/dm_medium"
+                            android:layout_marginStart="10dp"
+                            android:textSize="12dp"
+                            android:text="Centring Date"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/white_border"
+                            android:layout_alignParentBottom="true"/>
+
+                    </RelativeLayout>
+
+
+
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_above="@+id/rr_submitView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/layout_blanking_date"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rr_submitView"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/view5"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/white_border"/>
+
+                <TextView
+                    android:id="@+id/tv_submitTask"
+                    android:layout_below="@+id/view5"
+                    android:layout_width="250dp"
+                    android:layout_height="40dp"
+                    android:text="Submit Task"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/dm_medium"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:background="@drawable/rounded_corner_button"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

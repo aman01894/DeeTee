@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ScanActivity">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fram_image">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_login"
+                    android:layout_above="@+id/barcode_scanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Scan QR Code to log in"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/dm_bold"
+                    android:textSize="20dp"
+					android:layout_marginStart="@dimen/_30sdp"
+					android:layout_marginEnd="@dimen/_30sdp"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                     />
+
+                <com.journeyapps.barcodescanner.BarcodeView
+                    android:id="@+id/barcode_scanner"
+                    android:layout_centerInParent="true"
+                    android:layout_width="@dimen/_130sdp"
+                    android:layout_height="@dimen/_130sdp"/>
+                <ImageView
+                    android:layout_width="@dimen/_140sdp"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/scanner_box"/>
+
+
+
+                <RelativeLayout
+                    android:layout_below="@+id/barcode_scanner"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_height="wrap_content"
+					android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/_30sdp"
+                    android:layout_marginEnd="@dimen/_30sdp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:paddingStart="@dimen/_8sdp"
+						android:paddingEnd="@dimen/_5sdp"
+						android:paddingBottom="@dimen/_5sdp"
+						android:paddingTop="@dimen/_5sdp"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/hint_color"
+                        android:background="@drawable/rounded_corner"
+                        android:fontFamily="@font/dm_regular"
+                        android:hint="Enter Employee ID Here"/>
+
+                    <TextView
+                        android:id="@+id/tv_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Search"
+						android:paddingStart="@dimen/_7sdp"
+						android:paddingEnd="@dimen/_7sdp"
+						android:paddingBottom="@dimen/_4sdp"
+						android:paddingTop="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/dm_medium"
+
+                        android:background="@drawable/rounded_corner_button"/>
+
+                </RelativeLayout>
+
+
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
