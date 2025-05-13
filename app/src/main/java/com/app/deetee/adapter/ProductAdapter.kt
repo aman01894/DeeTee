@@ -1,19 +1,19 @@
 package com.app.deetee.adapter
 
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app.deetee.R
+import com.app.deetee.model.Product
 
 
 data class ProductList(val productHeading: String, val productName: String)
 
 class ProductAdapter(
-    private val statuses: List<ProductList>) : RecyclerView.Adapter<ProductAdapter.StatusViewHolder>() {
+    private val statuses: MutableList<Product>
+) : RecyclerView.Adapter<ProductAdapter.StatusViewHolder>() {
 
     class StatusViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tv_productNumber: TextView = view.findViewById(R.id.tv_productNumber)
@@ -28,8 +28,9 @@ class ProductAdapter(
 
     override fun onBindViewHolder(holder: StatusViewHolder, position: Int) {
         val status = statuses[position]
-        holder.tv_productNumber.text = "${status.productHeading}"
-        holder.tv_productName.text = "${status.productName}"
+        val  productNumber = 1+ position
+        holder.tv_productNumber.text = "${"Product "+productNumber}"
+        holder.tv_productName.text = "${status.item_name}"
 
         // Handle click on a status item
       /*  holder.itemView.setOnClickListener {

@@ -225,6 +225,7 @@
                                 android:text="Sales Order Details"/>
 
                             <RelativeLayout
+                                android:id="@+id/rr_soView"
                                 android:layout_below="@+id/txtOrder"
                                 android:layout_width="match_parent"
                                 android:layout_marginTop="10dp"
@@ -253,6 +254,41 @@
                                         android:fontFamily="@font/dm_regular"
                                         android:textSize="14dp"
                                         android:text="04 Products"/>
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/rrDriveRols"
+                                android:layout_below="@+id/rr_soView"
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="10dp"
+                                android:layout_height="wrap_content">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    >
+                                    <TextView
+                                        android:id="@+id/txt_OrderName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/white"
+                                        android:fontFamily="@font/dm_bold"
+                                        android:textSize="14dp"
+                                        android:text="Drive Rolls -130x685x776"/>
+                                    <TextView
+                                        android:id="@+id/txt_orderQty"
+                                        android:layout_below="@+id/txt_OrderName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textColor="@color/hint_color"
+                                        android:fontFamily="@font/dm_regular"
+                                        android:textSize="14dp"
+                                        android:text="Order Qty - 12"/>
 
                                 </RelativeLayout>
 
@@ -301,10 +337,12 @@
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_weight="1.5"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:background="@color/white_light">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -315,7 +353,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                     <RelativeLayout
                         android:id="@+id/rr_mainView"
                         android:layout_width="match_parent"
@@ -613,10 +650,220 @@
 
 
                     </RelativeLayout>
-
                     <RelativeLayout
-                        android:id="@+id/rr_blankingDate"
+                        android:id="@+id/rr_stageView"
+                        android:visibility="visible"
                         android:layout_below="@+id/rr_mainView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:id="@+id/rr_blankingDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:background="@color/blue">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="Blanking Date"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:textSize="10dp"
+                                android:text="480 mins"/>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rr_htDate"
+                            android:layout_below="@+id/rr_blankingDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="H.T. Date"/>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_border"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rr_facingDate"
+                            android:layout_below="@+id/rr_htDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="Face Grinding Date"/>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_border"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rr_centringDate"
+                            android:layout_below="@+id/rr_facingDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="Centring Date"/>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_border"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:visibility="gone"
+                        android:id="@+id/rr_DriveRollView"
+                        android:layout_below="@+id/rr_mainView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:id="@+id/rr_driveRoll3mm"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:background="@color/blue">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="1T1-T3(ST-UP TO 3.00MM)"/>
+
+
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rr_DriveRoll57"
+                            android:layout_below="@+id/rr_driveRoll3mm"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="1T1-T3(ST-3.10 TO 5.70MM)"/>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_border"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rr_DriveRoll1T2"
+                            android:layout_below="@+id/rr_DriveRoll57"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:textColor="@color/black"
+                                android:fontFamily="@font/dm_medium"
+                                android:layout_marginStart="10dp"
+                                android:textSize="12dp"
+                                android:text="1T2"/>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_border"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
+
+
+                    </RelativeLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/view20"
+        android:layout_width="5dp"
+        android:visibility="gone"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/ll_nosView"
+        android:layout_weight="1.5"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_light">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <RelativeLayout
+                        android:id="@+id/rr_blankingDateNos"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:background="@color/blue">
@@ -645,8 +892,8 @@
 
                     </RelativeLayout>
                     <RelativeLayout
-                        android:id="@+id/rr_htDate"
-                        android:layout_below="@+id/rr_blankingDate"
+                        android:id="@+id/rr_htDateNos"
+                        android:layout_below="@+id/rr_blankingDateNos"
                         android:layout_width="match_parent"
                         android:layout_height="45dp">
 
@@ -669,8 +916,8 @@
 
                     </RelativeLayout>
                     <RelativeLayout
-                        android:id="@+id/rr_facingDate"
-                        android:layout_below="@+id/rr_htDate"
+                        android:id="@+id/rr_facingDateNos"
+                        android:layout_below="@+id/rr_htDateNos"
                         android:layout_width="match_parent"
                         android:layout_height="45dp">
 
@@ -693,8 +940,8 @@
 
                     </RelativeLayout>
                     <RelativeLayout
-                        android:id="@+id/rr_centringDate"
-                        android:layout_below="@+id/rr_facingDate"
+                        android:id="@+id/rr_centringDateNos"
+                        android:layout_below="@+id/rr_facingDateNos"
                         android:layout_width="match_parent"
                         android:layout_height="45dp">
 
@@ -716,15 +963,13 @@
                             android:layout_alignParentBottom="true"/>
 
                     </RelativeLayout>
-
-
-
                 </RelativeLayout>
             </ScrollView>
         </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_weight="1"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout
@@ -737,6 +982,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <include layout="@layout/layout_blanking_date_horizontal"/>
 
                     <include layout="@layout/layout_blanking_date"/>
 

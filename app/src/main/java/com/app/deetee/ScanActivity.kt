@@ -1,28 +1,43 @@
 package com.app.deetee
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.app.deetee.api.Controller
+import com.app.deetee.api.Preferences
+import com.app.deetee.api.ProgressDialogUtil
+import com.app.deetee.model.LoginResponse
+import com.app.vroomo.api.APIInterface
+import com.eld.eld.api.APIClient.getClientLogin
+import com.google.gson.Gson
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.BarcodeView
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ScanActivity : ComponentActivity() {
-
+    var mContext: Context = this
     private lateinit var barcodeScannerView: BarcodeView
     private lateinit var tv_search: TextView
+    private lateinit var etUserName: EditText
     private val CAMERA_PERMISSION_CODE = 100
+    private var apiInterface: APIInterface? = null
+    private var isApiCall : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +46,24 @@ class ScanActivity : ComponentActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
         setContentView(R.layout.activity_scan)
-
+        apiInterface = getClientLogin().create(APIInterface::class.java)
+        ProgressDialogUtil.LoadingDialog(this)
         barcodeScannerView = findViewById(R.id.barcode_scanner)
         tv_search = findViewById(R.id.tv_search)
+        etUserName = findViewById(R.id.etUserName)
         checkCameraPermission()
 
 
         tv_search.setOnClickListener {
-            val intent = Intent(this, ManualInputActivity::class.java)
-            startActivity(intent)
+            var userName = etUserName.text.toString()
+            if (userName!=null && !userName.equals("")){
+                val intent = Intent(this, ManualInputActivity::class.java)
+                intent.putExtra("key_username", userName)
+                startActivity(intent)
+            }else{
+                showMessage("Enter Employee ID")
+            }
+
         }
 
     }
@@ -48,16 +72,33 @@ class ScanActivity : ComponentActivity() {
             override fun barcodeResult(result: BarcodeResult?) {
                 result?.let {
                     val scannedValue = it.text
-                    //Toast.makeText(this@ScanActivity, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
-                    nextActivity()
-                    // Send result back to MainActivity
-                    /*  val intent = Intent()
-                      intent.putExtra("QR_RESULT", scannedValue)
-                      setResult(RESULT_OK, intent)
-                      finish()*/ // Close Scanner Activity
+
+
+                    if (scannedValue != null) {
+                        val jsonObject = JSONObject(scannedValue)
+                        if (jsonObject.has("username") && !jsonObject.isNull("username")) {
+                            if (!isApiCall){
+                                isApiCall = true
+                                Log.e("ScanData",scannedValue)
+                                var userName  =   jsonObject.getString("username")
+                                userLogin(userName)
+                            }
+                        }else{
+                            isApiCall = false
+                            showMessage("Invalid QR")
+                        }
+                    }else{
+                        isApiCall = false
+                        showMessage("Invalid QR")
+                    }
+
+
                 }
             }
         })
+    }
+    private fun showMessage(msg:String){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
     private fun nextActivity(){
         val intent = Intent(this, HomeActivity::class.java)
@@ -92,10 +133,50 @@ class ScanActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         barcodeScannerView.resume()
+        isApiCall =false
     }
 
     override fun onPause() {
         super.onPause()
         barcodeScannerView.pause()
     }
+
+    private fun userLogin(userNm: String) {
+        if (Controller.isOnline(this)) {
+            ProgressDialogUtil.show()
+            val params = mapOf(
+                "username" to userNm
+            )
+            val call: Call<LoginResponse> = apiInterface!!.userLogin(params)
+
+            call.enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    val gson = Gson()
+                    val successResponse = gson.toJson(response.body())
+                    Log.i("successResponse", "" + successResponse)
+                    ProgressDialogUtil.hide()
+
+                    if (response.code() == 200) {
+                        // val status: String = response.body().()
+                        Preferences.save(mContext, Preferences.KEY_TOKEN,response.body()!!.token)
+                        nextActivity()
+                    } else {
+                        showMessage(response.body()!!.message)
+                        isApiCall =false
+                    }
+
+                }
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    call.cancel()
+                    isApiCall =false
+                    showMessage("Something went wrong")
+                    ProgressDialogUtil.hide()
+
+                }
+            })
+        } else {
+            showMessage("No internet connection")
+        }
+    }
+
 }

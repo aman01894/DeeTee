@@ -5,9 +5,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -22,10 +23,23 @@ import com.app.deetee.adapter.ProcessList
 import com.app.deetee.adapter.ProductAdapter
 import com.app.deetee.adapter.ProductDetailList
 import com.app.deetee.adapter.ProductDetailsAdapter
-import com.app.deetee.adapter.ProductList
+import com.app.deetee.api.Controller
+import com.app.deetee.api.ProgressDialogUtil
+import com.app.deetee.model.MachineResponse
+import com.app.deetee.model.Product
+import com.app.deetee.model.ProductDetailsResponse
+import com.app.deetee.model.SalesOrderResponse
+import com.app.vroomo.api.APIInterface
+import com.eld.eld.api.APIClient
+import com.google.gson.Gson
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.BarcodeView
+import com.squareup.picasso.Picasso
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeActivity : ComponentActivity() {
     private lateinit var barcodeScannerView: BarcodeView
@@ -52,8 +66,27 @@ class HomeActivity : ComponentActivity() {
     private lateinit var rv_processRecycler: RecyclerView
     private lateinit var rr_product: RelativeLayout
     private lateinit var rr_selectProcess: RelativeLayout
+    private lateinit var imgMachineScan: ImageView
+    private lateinit var tv_machine_model: TextView
+    private lateinit var tv_machine_modelNumber: TextView
+    private lateinit var tv_Available: TextView
+    private lateinit var tv_machineDetail: TextView
+    private lateinit var tv_machine_SoNumber: TextView
+    private lateinit var tv_machine_ProductName: TextView
+    private lateinit var tv_QT_Order: TextView
+
+
 
     private val CAMERA_PERMISSION_CODE = 100
+    private var apiInterface: APIInterface? = null
+    private var isMachineScan : Boolean = false
+    private var isSalesOrderScan : Boolean = false
+    private var isProductScan : Boolean = false
+
+
+    val products = mutableListOf<Product>()
+    val adapter = ProductAdapter(products)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +96,9 @@ class HomeActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        apiInterface = APIClient.getClientLogin().create(APIInterface::class.java)
+        ProgressDialogUtil.LoadingDialog(this)
         init()
         checkCameraPermission()
         onClick()
@@ -94,14 +130,22 @@ class HomeActivity : ComponentActivity() {
         rv_processRecycler = findViewById(R.id.rv_processRecycler)
         rr_processtView = findViewById(R.id.rr_processtView)
         tv_scanProcessQR = findViewById(R.id.tv_scanProcessQR)
+        imgMachineScan = findViewById(R.id.imgMachineScan)
+        tv_machine_model = findViewById(R.id.tv_machine_model)
+        tv_machine_modelNumber = findViewById(R.id.tv_machine_modelNumber)
+        tv_Available = findViewById(R.id.tv_Available)
+        tv_machineDetail = findViewById(R.id.tv_machineDetail)
+        tv_machine_SoNumber = findViewById(R.id.tv_machine_SoNumber)
+        tv_machine_ProductName = findViewById(R.id.tv_machine_ProductName)
+        tv_QT_Order = findViewById(R.id.tv_QT_Order)
 
 
-        // for order status
-        val products = listOf(
-            ProductList("Product 1","Tube Forming Rolls"),
-            ProductList("Product 2","Tube Forming Rolls"),
-            ProductList("Product 3","Tube Forming Rolls"),
-            ProductList("Product 4","Tube Forming Rolls"))
+        /*  // for order status
+          val products = listOf(
+              ProductList("Product 1","Tube Forming Rolls"),
+              ProductList("Product 2","Tube Forming Rolls"),
+              ProductList("Product 3","Tube Forming Rolls"),
+              ProductList("Product 4","Tube Forming Rolls"))*/
 
         val productDetails = listOf(
             ProductDetailList("Order Qty.","5"),
@@ -133,27 +177,61 @@ class HomeActivity : ComponentActivity() {
         tv_search.setOnClickListener {
             rr_machineDetail.visibility = View.VISIBLE
             tv_search.visibility = View.GONE
+
+
         }
         tv_scanMachineQR.setOnClickListener {
-            rr_scanMachineDetails.visibility = View.VISIBLE
-            rr_scanMachineView.visibility = View.GONE
-            rr_saleOrder_master.setBackgroundResource(R.drawable.rounded_corner_white)
-            tv_scanOrderQR.setBackgroundResource(R.drawable.rounded_corner_button)
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                // Permission already granted, proceed with scanner
+                startCamera(1)
+                showMessage("Scan Machine QR")
+            } else {
+                // Request camera permission
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+            }
+
+
+            /* rr_scanMachineDetails.visibility = View.VISIBLE
+             rr_scanMachineView.visibility = View.GONE
+             rr_saleOrder_master.setBackgroundResource(R.drawable.rounded_corner_white)
+             tv_scanOrderQR.setBackgroundResource(R.drawable.rounded_corner_button)*/
         }
 
         tv_scanOrderQR.setOnClickListener {
-            rr_SalesDetailsView.visibility = View.VISIBLE
-            rr_saleOrderView.visibility = View.GONE
-            tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
-            rr_product.setBackgroundResource(R.drawable.rounded_corner_white)
+            /* rr_SalesDetailsView.visibility = View.VISIBLE
+             rr_saleOrderView.visibility = View.GONE
+             tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
+             rr_product.setBackgroundResource(R.drawable.rounded_corner_white)*/
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                // Permission already granted, proceed with scanner
+                barcodeScannerView.resume()
+                startCamera(2)
+                showMessage("Scan SalesOrder QR")
+            } else {
+                // Request camera permission
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+            }
         }
 
         tv_scanProductQR.setOnClickListener {
-            rr_producDetailsView.visibility = View.VISIBLE
-            rr_productView.visibility = View.GONE
-            tv_startProcess.visibility = View.VISIBLE
-            tv_scanProcessQR.setBackgroundResource(R.drawable.rounded_corner_button)
-            rr_selectProcess.setBackgroundResource(R.drawable.rounded_corner_white)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                // Permission already granted, proceed with scanner
+                barcodeScannerView.resume()
+                startCamera(3)
+                showMessage("Scan Product QR")
+            } else {
+                // Request camera permission
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+            }
+
 
 
         }
@@ -174,17 +252,59 @@ class HomeActivity : ComponentActivity() {
             startActivity(intent)
         }
     }
-    private fun startCamera() {
+    private fun startCamera(scanType : Int) {
         barcodeScannerView.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
                 result?.let {
                     val scannedValue = it.text
-                    //Toast.makeText(this@HomeActivity, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
-                    // Send result back to MainActivity
-                    /*  val intent = Intent()
-                      intent.putExtra("QR_RESULT", scannedValue)
-                      setResult(RESULT_OK, intent)
-                      finish()*/ // Close Scanner Activity
+                    if (scannedValue != null) {
+                        Log.e("ScanMachine",scannedValue)
+
+                        if (scanType.equals(1)){
+                            val jsonObject = JSONObject(scannedValue)
+                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
+                                if (!isMachineScan){
+                                    isMachineScan = true
+                                    Log.e("ScanData",scannedValue)
+                                    var machineID  =   jsonObject.getInt("id")
+                                    scanMachine(machineID)
+                                }
+                            }else{
+                                isMachineScan = false
+                                showMessage("Invalid QR")
+                            }
+                        }
+                        else if (scanType.equals(2)){
+                            val jsonObject = JSONObject(scannedValue)
+                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
+                                if (!isSalesOrderScan){
+                                    isSalesOrderScan = true
+                                    Log.e("ScanData",scannedValue)
+                                    var machineID  =   jsonObject.getInt("id")
+                                    scanSalesORder(machineID)
+                                }
+                            }else{
+                                isSalesOrderScan = false
+                                showMessage("Invalid QR")
+                            }
+                        }else if (scanType.equals(3)){
+                            val jsonObject = JSONObject(scannedValue)
+                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
+                                if (!isProductScan){
+                                    isProductScan = true
+                                    Log.e("ScanData",scannedValue)
+                                    var ProductID  =   jsonObject.getInt("id")
+                                    productDetails(ProductID)
+                                }
+                            }else{
+                                isProductScan = false
+                                showMessage("Invalid QR")
+                            }
+                        }
+                    }else{
+                        // isApiCall = false
+                        showMessage("Invalid QR")
+                    }
                 }
             }
         })
@@ -194,7 +314,7 @@ class HomeActivity : ComponentActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED) {
             // Permission already granted, proceed with scanner
-            startCamera()
+            //  startCamera()
         } else {
             // Request camera permission
             ActivityCompat.requestPermissions(this,
@@ -207,7 +327,7 @@ class HomeActivity : ComponentActivity() {
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 // Permission granted, start scanner
-                startCamera()
+                // startCamera()
             } else {
                 // Permission denied, show message
                 Toast.makeText(this, "Camera permission is required for scanning", Toast.LENGTH_SHORT).show()
@@ -225,5 +345,150 @@ class HomeActivity : ComponentActivity() {
         super.onPause()
         barcodeScannerView.pause()
     }
+
+    private fun scanMachine(id: Int) {
+        if (Controller.isOnline(this)) {
+            ProgressDialogUtil.show()
+            /* val params = mapOf(
+                 "username" to userNm
+             )*/
+            val call: Call<MachineResponse> = apiInterface!!.getMachine(id)
+
+            call.enqueue(object : Callback<MachineResponse> {
+                override fun onResponse(call: Call<MachineResponse>, response: Response<MachineResponse>) {
+                    val gson = Gson()
+                    val successResponse = gson.toJson(response.body())
+                    Log.i("successResponse", "Machine Scan==" + successResponse)
+                    ProgressDialogUtil.hide()
+                    if (response.code() == 200) {
+
+
+                        rr_scanMachineDetails.visibility = View.VISIBLE
+                        rr_scanMachineView.visibility = View.GONE
+                        rr_saleOrder_master.setBackgroundResource(R.drawable.rounded_corner_white)
+                        tv_scanOrderQR.setBackgroundResource(R.drawable.rounded_corner_button)
+
+                        tv_machine_modelNumber.setText(response.body()?.data?.machine)
+                        tv_machineDetail.setText(response.body()?.data?.machine_type)
+                        tv_Available.setText(response.body()?.data?.machine_status)
+                        Picasso.get().load((response.body()?.data?.machine_image)).into(imgMachineScan)
+
+                    } else {
+                        showMessage(response.body()!!.message)
+                        isMachineScan = false
+                    }
+
+                }
+                override fun onFailure(call: Call<MachineResponse>, t: Throwable) {
+                    call.cancel()
+                    showMessage("Something went wrong")
+                    ProgressDialogUtil.hide()
+                    isMachineScan = false
+
+                }
+            })
+        } else {
+            showMessage("No internet connection")
+        }
+    }
+
+    private fun scanSalesORder(id: Int) {
+        if (Controller.isOnline(this)) {
+            ProgressDialogUtil.show()
+            /* val params = mapOf(
+                 "username" to userNm
+             )*/
+            val call: Call<SalesOrderResponse> = apiInterface!!.getSalesMachine(id)
+
+            call.enqueue(object : Callback<SalesOrderResponse> {
+                override fun onResponse(call: Call<SalesOrderResponse>, response: Response<SalesOrderResponse>) {
+                    val gson = Gson()
+                    val successResponse = gson.toJson(response.body())
+                    Log.i("successResponse", "Machine Scan==" + successResponse)
+                    ProgressDialogUtil.hide()
+                    if (response.code() == 200) {
+
+                        rr_SalesDetailsView.visibility = View.VISIBLE
+                        rr_saleOrderView.visibility = View.GONE
+                        tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
+                        rr_product.setBackgroundResource(R.drawable.rounded_corner_white)
+
+
+                        val data = response.body()?.data
+                        tv_machine_SoNumber.setText(response.body()?.data?.so_no)
+                        //product list adapter
+                        data?.products?.let { newProducts ->
+                            products.clear()               // Clear old list if needed
+                            products.addAll(newProducts)
+                            adapter.notifyDataSetChanged()
+                        }
+
+                    } else {
+                        showMessage(response.body()!!.message)
+                        isSalesOrderScan = false
+                    }
+
+                }
+                override fun onFailure(call: Call<SalesOrderResponse>, t: Throwable) {
+                    call.cancel()
+                    showMessage("Something went wrong")
+                    ProgressDialogUtil.hide()
+                    isSalesOrderScan = false
+
+                }
+            })
+        } else {
+            showMessage("No internet connection")
+        }
+    }
+
+    private fun productDetails(id: Int) {
+        if (Controller.isOnline(this)) {
+            ProgressDialogUtil.show()
+            /* val params = mapOf(
+                 "username" to userNm
+             )*/
+            val call: Call<ProductDetailsResponse> = apiInterface!!.getProductDetails(id)
+
+            call.enqueue(object : Callback<ProductDetailsResponse> {
+                override fun onResponse(call: Call<ProductDetailsResponse>, response: Response<ProductDetailsResponse>) {
+                    val gson = Gson()
+                    val successResponse = gson.toJson(response.body())
+                    Log.i("successResponse", "Machine Scan==" + successResponse)
+                    ProgressDialogUtil.hide()
+                    if (response.code() == 200) {
+
+                        rr_producDetailsView.visibility = View.VISIBLE
+                        rr_productView.visibility = View.GONE
+                        tv_startProcess.visibility = View.VISIBLE
+                        rr_selectProcess.setBackgroundResource(R.drawable.rounded_corner_white)
+
+                        tv_machine_ProductName.setText(response.body()?.data?.item_name)
+                        tv_QT_Order.setText(response.body()?.data?.quantity)
+
+                    } else {
+                        showMessage(response.body()!!.message)
+                        isProductScan = false
+                    }
+
+                }
+                override fun onFailure(call: Call<ProductDetailsResponse>, t: Throwable) {
+                    call.cancel()
+                    showMessage("Something went wrong")
+                    ProgressDialogUtil.hide()
+                    isProductScan = false
+
+                }
+            })
+        } else {
+            showMessage("No internet connection")
+        }
+    }
+
+
+    private fun showMessage(msg:String){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
 
 }

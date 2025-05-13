@@ -51,8 +51,7 @@
                 android:fontFamily="@font/dm_bold"
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
-                android:textSize="@dimen/_7sdp"
-                android:text="SE-I-N-740237-A"/>
+                android:textSize="@dimen/_7sdp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_productList"
