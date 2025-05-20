@@ -8,11 +8,13 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.app.deetee.api.Controller
@@ -30,7 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ScanActivity : ComponentActivity() {
+class ScanActivity : AppCompatActivity() {
     var mContext: Context = this
     private lateinit var barcodeScannerView: BarcodeView
     private lateinit var tv_search: TextView
@@ -38,6 +40,35 @@ class ScanActivity : ComponentActivity() {
     private val CAMERA_PERMISSION_CODE = 100
     private var apiInterface: APIInterface? = null
     private var isApiCall : Boolean = false
+    private lateinit var scanString : String
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action != KeyEvent.ACTION_DOWN) {
+            return super.dispatchKeyEvent(event)
+        }
+
+        when (event.keyCode) {
+            KeyEvent.KEYCODE_BACK -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+            KeyEvent.KEYCODE_ENTER -> {
+                // lookupResult(scanString)
+                return true
+            }
+            else -> {
+                val pressedKey = event.unicodeChar.toChar()
+                if (pressedKey.code != 0) {
+                    scanString += pressedKey
+                    Log.e("ScanCode" , ""+scanString)
+                    showMessage(scanString)
+                    return true
+                }
+            }
+        }
+
+        return super.dispatchKeyEvent(event)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
