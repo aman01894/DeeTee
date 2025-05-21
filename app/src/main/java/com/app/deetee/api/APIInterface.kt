@@ -16,7 +16,7 @@ interface APIInterface {
 
         @Headers("Content-Type: application/json")
         @POST("operator-login")
-        fun userLogin(@Body params: Map<String, String>): Call<LoginResponse>
+        fun userLogin(@Body params: Map<String, Int>): Call<LoginResponse>
 
         @GET("scan-machine/{id}")
         fun getMachine(@Path("id") id: Int): Call<MachineResponse>

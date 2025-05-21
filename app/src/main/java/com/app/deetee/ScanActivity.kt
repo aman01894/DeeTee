@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,39 +35,80 @@ class ScanActivity : AppCompatActivity() {
     var mContext: Context = this
     private lateinit var barcodeScannerView: BarcodeView
     private lateinit var tv_search: TextView
+    private lateinit var txtSample: TextView
     private lateinit var etUserName: EditText
     private val CAMERA_PERMISSION_CODE = 100
     private var apiInterface: APIInterface? = null
     private var isApiCall : Boolean = false
-    private lateinit var scanString : String
+
+    var scanString = ""
+    var lastInputTime: Long = 0
+    val SCAN_TIMEOUT = 2000L // 1 second timeout
+
+
+    private fun disableEditTextFocus() {
+        etUserName.clearFocus()
+        etUserName.isFocusable = false
+        etUserName.isFocusableInTouchMode = false
+        etUserName.isCursorVisible = false
+    }
+
+    private fun enableEditTextFocus() {
+        etUserName.isFocusable = true
+        etUserName.isFocusableInTouchMode = true
+        etUserName.isCursorVisible = true
+        // etUserName.requestFocus()
+    }
+
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action != KeyEvent.ACTION_DOWN) {
-            return super.dispatchKeyEvent(event)
-        }
-
-        when (event.keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                onBackPressedDispatcher.onBackPressed()
-                return true
-            }
-            KeyEvent.KEYCODE_ENTER -> {
-                // lookupResult(scanString)
-                return true
-            }
-            else -> {
-                val pressedKey = event.unicodeChar.toChar()
-                if (pressedKey.code != 0) {
-                    scanString += pressedKey
-                    Log.e("ScanCode" , ""+scanString)
-                    showMessage(scanString)
-                    return true
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastInputTime > SCAN_TIMEOUT) {
+                scanString = "" // ✅ Clear scan if timeout passed
+                if (scanString.isEmpty()) {
+                    disableEditTextFocus()
                 }
+            }
+            lastInputTime = currentTime
+
+            if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                Log.e("ScanCode", "✅ Final scan: $scanString")
+                txtSample.text = scanString
+                // scanString = "" // ✅ Clear after processing
+
+
+                if (scanString != null) {
+                    if (!isApiCall){
+                        isApiCall = true
+                        var userID = Integer.parseInt(scanString, 10);
+
+                        userLogin(userID)
+                    }
+
+                }else{
+                    isApiCall = false
+                    showMessage("Invalid QR")
+                    enableEditTextFocus()
+                }
+
+                return true
+            }
+
+            val pressedKey = event.unicodeChar.toChar()
+            if (pressedKey.code != 0) {
+                disableEditTextFocus()
+                etUserName.isFocusable = false
+                etUserName.isCursorVisible = false
+                scanString += pressedKey
+                Log.e("ScanCode", "Scan so far: $scanString")
+                return true
             }
         }
 
         return super.dispatchKeyEvent(event)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +122,7 @@ class ScanActivity : AppCompatActivity() {
         barcodeScannerView = findViewById(R.id.barcode_scanner)
         tv_search = findViewById(R.id.tv_search)
         etUserName = findViewById(R.id.etUserName)
+        txtSample = findViewById(R.id.txtSample)
         checkCameraPermission()
 
 
@@ -103,21 +144,15 @@ class ScanActivity : AppCompatActivity() {
             override fun barcodeResult(result: BarcodeResult?) {
                 result?.let {
                     val scannedValue = it.text
-
-
                     if (scannedValue != null) {
-                        val jsonObject = JSONObject(scannedValue)
-                        if (jsonObject.has("username") && !jsonObject.isNull("username")) {
-                            if (!isApiCall){
-                                isApiCall = true
-                                Log.e("ScanData",scannedValue)
-                                var userName  =   jsonObject.getString("username")
-                                userLogin(userName)
-                            }
-                        }else{
-                            isApiCall = false
-                            showMessage("Invalid QR")
+                        if (!isApiCall){
+                            isApiCall = true
+                            Log.e("ScanData",scannedValue)
+                            var userName  =   scannedValue
+                            var userID = Integer.parseInt(userName, 10);
+                            userLogin(userID)
                         }
+
                     }else{
                         isApiCall = false
                         showMessage("Invalid QR")
@@ -172,7 +207,7 @@ class ScanActivity : AppCompatActivity() {
         barcodeScannerView.pause()
     }
 
-    private fun userLogin(userNm: String) {
+    private fun userLogin(userNm: Int) {
         if (Controller.isOnline(this)) {
             ProgressDialogUtil.show()
             val params = mapOf(
@@ -192,7 +227,14 @@ class ScanActivity : AppCompatActivity() {
                         Preferences.save(mContext, Preferences.KEY_TOKEN,response.body()!!.token)
                         nextActivity()
                     } else {
-                        showMessage(response.body()!!.message)
+                        val errorMessage = try {
+                            val errorJson = response.errorBody()?.string()
+                            JSONObject(errorJson).optString("message", "Something went wrong")
+                        } catch (e: Exception) {
+                            "Something went wrong"
+                        }
+                        showMessage(errorMessage)
+                       // nextActivity()
                         isApiCall =false
                     }
 

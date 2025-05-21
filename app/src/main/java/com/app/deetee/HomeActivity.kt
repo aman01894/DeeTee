@@ -7,7 +7,9 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -40,6 +42,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Integer.parseInt
 
 class HomeActivity : ComponentActivity() {
     private lateinit var barcodeScannerView: BarcodeView
@@ -74,6 +77,16 @@ class HomeActivity : ComponentActivity() {
     private lateinit var tv_machine_SoNumber: TextView
     private lateinit var tv_machine_ProductName: TextView
     private lateinit var tv_QT_Order: TextView
+    private lateinit var etEnterID: EditText
+
+    private lateinit var tv_verifyMachine: TextView
+    private lateinit var imgScnMachine: ImageView
+    private lateinit var tv_modelNumber: TextView
+    private lateinit var tv_mDetail: TextView
+    private lateinit var tv_continue: TextView
+    private lateinit var tv_reScan: TextView
+
+
 
 
 
@@ -82,11 +95,31 @@ class HomeActivity : ComponentActivity() {
     private var isMachineScan : Boolean = false
     private var isSalesOrderScan : Boolean = false
     private var isProductScan : Boolean = false
+    private var isScanType : Int = 1
+
 
 
     val products = mutableListOf<Product>()
     val adapter = ProductAdapter(products)
 
+    var scanString = ""
+    var lastInputTime: Long = 0
+    val SCAN_TIMEOUT = 2000L // 1 second timeout
+
+
+    private fun disableEditTextFocus() {
+        etEnterID.clearFocus()
+        etEnterID.isFocusable = false
+        etEnterID.isFocusableInTouchMode = false
+        etEnterID.isCursorVisible = false
+    }
+
+    private fun enableEditTextFocus() {
+        etEnterID.isFocusable = true
+        etEnterID.isFocusableInTouchMode = true
+        etEnterID.isCursorVisible = true
+        // etUserName.requestFocus()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,6 +136,58 @@ class HomeActivity : ComponentActivity() {
         checkCameraPermission()
         onClick()
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastInputTime > SCAN_TIMEOUT) {
+                scanString = "" // ✅ Clear scan if timeout passed
+                if (scanString.isEmpty()) {
+                    disableEditTextFocus()
+                }
+            }
+            lastInputTime = currentTime
+
+            if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                Log.e("ScanCode", "✅ Final scan: $scanString")
+                if (scanString != null) {
+                    if (isScanType.equals(1)){
+                        Log.e("ScanData",scanString)
+                        //   var machineID  =  scanString
+                        var machineID = parseInt(scanString, 10);
+                        scanMachine(machineID)
+
+                    }
+                    else if (isScanType.equals(2)){
+                        Log.e("ScanData",scanString)
+                        var machineID = parseInt(scanString, 10);
+                        scanSalesORder(machineID)
+                    }else if (isScanType.equals(3)){
+                        Log.e("ScanData",scanString)
+                        var machineID = parseInt(scanString, 10);
+                        productDetails(machineID)
+                    }
+                }else{
+                    showMessage("Invalid QR")
+                }
+
+                return true
+            }
+
+            val pressedKey = event.unicodeChar.toChar()
+            if (pressedKey.code != 0) {
+                disableEditTextFocus()
+                etEnterID.isFocusable = false
+                etEnterID.isCursorVisible = false
+                scanString += pressedKey
+                Log.e("ScanCode", "Scan so far: $scanString")
+                return true
+            }
+        }
+
+        return super.dispatchKeyEvent(event)
+    }
+
 
     private fun init(){
         rr_saleOrder_master = findViewById(R.id.rr_saleOrder_master)
@@ -125,6 +210,9 @@ class HomeActivity : ComponentActivity() {
         rr_product = findViewById(R.id.rr_product)
         rr_selectProcess = findViewById(R.id.rr_selectProcess)
         tv_startProcess = findViewById(R.id.tv_startProcess)
+        etEnterID = findViewById(R.id.etEnterID)
+        tv_continue = findViewById(R.id.tv_continue)
+        tv_reScan = findViewById(R.id.tv_reScan)
 
         rr_producProcessView = findViewById(R.id.rr_producProcessView)
         rv_processRecycler = findViewById(R.id.rv_processRecycler)
@@ -138,7 +226,10 @@ class HomeActivity : ComponentActivity() {
         tv_machine_SoNumber = findViewById(R.id.tv_machine_SoNumber)
         tv_machine_ProductName = findViewById(R.id.tv_machine_ProductName)
         tv_QT_Order = findViewById(R.id.tv_QT_Order)
-
+        tv_verifyMachine = findViewById(R.id.tv_verifyMachine)
+        imgScnMachine = findViewById(R.id.imgScnMachine)
+        tv_modelNumber = findViewById(R.id.tv_modelNumber)
+        tv_mDetail = findViewById(R.id.tv_mDetail)
 
         /*  // for order status
           val products = listOf(
@@ -219,6 +310,7 @@ class HomeActivity : ComponentActivity() {
             }
         }
 
+
         tv_scanProductQR.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -261,44 +353,31 @@ class HomeActivity : ComponentActivity() {
                         Log.e("ScanMachine",scannedValue)
 
                         if (scanType.equals(1)){
-                            val jsonObject = JSONObject(scannedValue)
-                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
-                                if (!isMachineScan){
-                                    isMachineScan = true
-                                    Log.e("ScanData",scannedValue)
-                                    var machineID  =   jsonObject.getInt("id")
-                                    scanMachine(machineID)
-                                }
-                            }else{
-                                isMachineScan = false
-                                showMessage("Invalid QR")
+
+                            if (!isMachineScan){
+                                isMachineScan = true
+                                Log.e("ScanData",scannedValue)
+                                var machineID = parseInt(scannedValue, 10);
+                                scanMachine(machineID)
                             }
+
                         }
                         else if (scanType.equals(2)){
-                            val jsonObject = JSONObject(scannedValue)
-                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
-                                if (!isSalesOrderScan){
-                                    isSalesOrderScan = true
-                                    Log.e("ScanData",scannedValue)
-                                    var machineID  =   jsonObject.getInt("id")
-                                    scanSalesORder(machineID)
-                                }
-                            }else{
-                                isSalesOrderScan = false
-                                showMessage("Invalid QR")
+
+                            if (!isSalesOrderScan){
+                                isSalesOrderScan = true
+                                Log.e("ScanData",scannedValue)
+                                var machineID = parseInt(scannedValue, 10);
+                                scanSalesORder(machineID)
                             }
+
                         }else if (scanType.equals(3)){
-                            val jsonObject = JSONObject(scannedValue)
-                            if (jsonObject.has("id") && !jsonObject.isNull("id")) {
-                                if (!isProductScan){
-                                    isProductScan = true
-                                    Log.e("ScanData",scannedValue)
-                                    var ProductID  =   jsonObject.getInt("id")
-                                    productDetails(ProductID)
-                                }
-                            }else{
-                                isProductScan = false
-                                showMessage("Invalid QR")
+
+                            if (!isProductScan){
+                                isProductScan = true
+                                Log.e("ScanData",scannedValue)
+                                var machineID = parseInt(scannedValue, 10);
+                                productDetails(machineID)
                             }
                         }
                     }else{
@@ -361,20 +440,15 @@ class HomeActivity : ComponentActivity() {
                     Log.i("successResponse", "Machine Scan==" + successResponse)
                     ProgressDialogUtil.hide()
                     if (response.code() == 200) {
-
-
-                        rr_scanMachineDetails.visibility = View.VISIBLE
-                        rr_scanMachineView.visibility = View.GONE
-                        rr_saleOrder_master.setBackgroundResource(R.drawable.rounded_corner_white)
-                        tv_scanOrderQR.setBackgroundResource(R.drawable.rounded_corner_button)
-
-                        tv_machine_modelNumber.setText(response.body()?.data?.machine)
-                        tv_machineDetail.setText(response.body()?.data?.machine_type)
-                        tv_Available.setText(response.body()?.data?.machine_status)
-                        Picasso.get().load((response.body()?.data?.machine_image)).into(imgMachineScan)
-
+                        verifyMachine(1,response,null,null)
                     } else {
-                        showMessage(response.body()!!.message)
+                        val errorMessage = try {
+                            val errorJson = response.errorBody()?.string()
+                            JSONObject(errorJson).optString("message", "Something went wrong")
+                        } catch (e: Exception) {
+                            "Something went wrong"
+                        }
+                        showMessage(errorMessage)
                         isMachineScan = false
                     }
 
@@ -389,6 +463,79 @@ class HomeActivity : ComponentActivity() {
             })
         } else {
             showMessage("No internet connection")
+        }
+    }
+
+    fun verifyMachine(i: Int, response: Response<MachineResponse>?, SOresponse: Response<SalesOrderResponse>?,
+                      Prresponse: Response<ProductDetailsResponse>?) {
+
+        rr_machineDetail.visibility = View.VISIBLE
+        tv_search.visibility = View.GONE
+        if (i==1){
+            tv_verifyMachine.setText("Verify Machine Details")
+            tv_modelNumber.setText(response?.body()?.data?.machine)
+            tv_mDetail.setText(response?.body()?.data?.machine_type)
+            Picasso.get().load((response?.body()?.data?.machine_image)).into(imgScnMachine)
+        }
+
+        if (i==2){
+            tv_verifyMachine.setText("Verify Sale Order")
+            tv_modelNumber.setText(SOresponse?.body()?.data?.so_no)
+            tv_mDetail.setText("SOID: "+SOresponse?.body()?.data?.so_id)
+            //   Picasso.get().load((response?.body()?.data?.machine_image)).into(imgScnMachine)
+        }
+
+        if (i==3){
+            tv_verifyMachine.setText("Verify Product")
+            tv_modelNumber.setText(Prresponse?.body()?.data?.item_name)
+            tv_mDetail.setText("")
+            //   Picasso.get().load((response?.body()?.data?.machine_image)).into(imgScnMachine)
+        }
+
+        tv_continue.setOnClickListener{
+            if (i==1){
+                isScanType = 2;
+                rr_scanMachineDetails.visibility = View.VISIBLE
+                rr_scanMachineView.visibility = View.GONE
+                rr_saleOrder_master.setBackgroundResource(R.drawable.rounded_corner_white)
+                tv_scanOrderQR.setBackgroundResource(R.drawable.rounded_corner_button)
+                tv_machine_modelNumber.setText(response?.body()?.data?.machine)
+                tv_machineDetail.setText(response?.body()?.data?.machine_type)
+                tv_Available.setText(response?.body()?.data?.machine_status)
+                Picasso.get().load((response?.body()?.data?.machine_image)).into(imgMachineScan)
+            }else if (i==2){
+                isScanType = 3;
+                rr_SalesDetailsView.visibility = View.VISIBLE
+                rr_saleOrderView.visibility = View.GONE
+                tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
+                rr_product.setBackgroundResource(R.drawable.rounded_corner_white)
+
+
+                val data = SOresponse?.body()?.data
+                tv_machine_SoNumber.setText(SOresponse?.body()?.data?.so_no)
+                //product list adapter
+                data?.products?.let { newProducts ->
+                    products.clear()               // Clear old list if needed
+                    products.addAll(newProducts)
+                    adapter.notifyDataSetChanged()
+                }
+            }else if (i==2){
+                // isScanType = 3;
+                rr_producDetailsView.visibility = View.VISIBLE
+                rr_productView.visibility = View.GONE
+                tv_startProcess.visibility = View.VISIBLE
+                rr_selectProcess.setBackgroundResource(R.drawable.rounded_corner_white)
+                tv_machine_ProductName.setText(Prresponse?.body()?.data?.item_name)
+                tv_QT_Order.setText(Prresponse?.body()?.data?.quantity)
+            }
+
+            rr_machineDetail.visibility = View.GONE
+            tv_search.visibility = View.VISIBLE
+        }
+        
+        tv_reScan.setOnClickListener{
+            rr_machineDetail.visibility = View.GONE
+            tv_search.visibility = View.VISIBLE
         }
     }
 
@@ -407,24 +554,15 @@ class HomeActivity : ComponentActivity() {
                     Log.i("successResponse", "Machine Scan==" + successResponse)
                     ProgressDialogUtil.hide()
                     if (response.code() == 200) {
-
-                        rr_SalesDetailsView.visibility = View.VISIBLE
-                        rr_saleOrderView.visibility = View.GONE
-                        tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
-                        rr_product.setBackgroundResource(R.drawable.rounded_corner_white)
-
-
-                        val data = response.body()?.data
-                        tv_machine_SoNumber.setText(response.body()?.data?.so_no)
-                        //product list adapter
-                        data?.products?.let { newProducts ->
-                            products.clear()               // Clear old list if needed
-                            products.addAll(newProducts)
-                            adapter.notifyDataSetChanged()
-                        }
-
+                        verifyMachine(2,null,response,null)
                     } else {
-                        showMessage(response.body()!!.message)
+                        val errorMessage = try {
+                            val errorJson = response.errorBody()?.string()
+                            JSONObject(errorJson).optString("message", "Something went wrong")
+                        } catch (e: Exception) {
+                            "Something went wrong"
+                        }
+                        showMessage(errorMessage)
                         isSalesOrderScan = false
                     }
 
@@ -457,17 +595,15 @@ class HomeActivity : ComponentActivity() {
                     Log.i("successResponse", "Machine Scan==" + successResponse)
                     ProgressDialogUtil.hide()
                     if (response.code() == 200) {
-
-                        rr_producDetailsView.visibility = View.VISIBLE
-                        rr_productView.visibility = View.GONE
-                        tv_startProcess.visibility = View.VISIBLE
-                        rr_selectProcess.setBackgroundResource(R.drawable.rounded_corner_white)
-
-                        tv_machine_ProductName.setText(response.body()?.data?.item_name)
-                        tv_QT_Order.setText(response.body()?.data?.quantity)
-
+                        verifyMachine(3,null,null,response)
                     } else {
-                        showMessage(response.body()!!.message)
+                        val errorMessage = try {
+                            val errorJson = response.errorBody()?.string()
+                            JSONObject(errorJson).optString("message", "Something went wrong")
+                        } catch (e: Exception) {
+                            "Something went wrong"
+                        }
+                        showMessage(errorMessage)
                         isProductScan = false
                     }
 

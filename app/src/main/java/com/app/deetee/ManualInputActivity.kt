@@ -83,7 +83,7 @@ class ManualInputActivity : ComponentActivity() {
         tv_continue.setOnClickListener {
             var userName = etUserName.text.toString()
             if (userName!=null && !userName.equals("")){
-                userLogin(userName)
+              //  userLogin(userName)
             }else{
                 showMessage("Enter Employee ID")
             }
@@ -119,7 +119,7 @@ class ManualInputActivity : ComponentActivity() {
                                 isApiCall = true
                                 Log.e("ScanData",scannedValue)
                                 var userName  =   jsonObject.getString("username")
-                                userLogin(userName)
+                               // userLogin(userName)
                             }
                         }else{
                             isApiCall = false
@@ -176,6 +176,7 @@ class ManualInputActivity : ComponentActivity() {
         barcodeScannerView.pause()
     }
 
+/*
     private fun userLogin(userNm: String) {
         if (Controller.isOnline(this)) {
             ProgressDialogUtil.show()
@@ -209,4 +210,5 @@ class ManualInputActivity : ComponentActivity() {
             showMessage("No internet connection")
         }
     }
+*/
 }

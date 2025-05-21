@@ -13,10 +13,17 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_weight="1"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/fram_image">
 
+
+            <TextView
+                android:id="@+id/txtSample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -37,10 +44,10 @@
                     android:textColor="@color/black"
                     android:fontFamily="@font/dm_bold"
                     android:textSize="20dp"
-					android:layout_marginStart="@dimen/_30sdp"
-					android:layout_marginEnd="@dimen/_30sdp"
+                    android:layout_marginStart="@dimen/_30sdp"
+                    android:layout_marginEnd="@dimen/_30sdp"
                     android:layout_marginBottom="@dimen/_15sdp"
-                     />
+                    />
 
                 <com.journeyapps.barcodescanner.BarcodeView
                     android:id="@+id/barcode_scanner"
@@ -60,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_height="wrap_content"
-					android:layout_centerHorizontal="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginStart="@dimen/_30sdp"
                     android:layout_marginEnd="@dimen/_30sdp">
 
@@ -68,13 +75,14 @@
                         android:id="@+id/etUserName"
                         android:layout_width="match_parent"
                         android:paddingStart="@dimen/_8sdp"
-						android:paddingEnd="@dimen/_5sdp"
-						android:paddingBottom="@dimen/_5sdp"
-						android:paddingTop="@dimen/_5sdp"
+                        android:paddingEnd="@dimen/_5sdp"
+                        android:paddingBottom="@dimen/_5sdp"
+                        android:paddingTop="@dimen/_5sdp"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:maxLength="10"
-                        android:inputType="textCapCharacters"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:layout_height="wrap_content"
                         android:textColorHint="@color/hint_color"
                         android:background="@drawable/rounded_corner"
@@ -86,10 +94,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Search"
-						android:paddingStart="@dimen/_7sdp"
-						android:paddingEnd="@dimen/_7sdp"
-						android:paddingBottom="@dimen/_4sdp"
-						android:paddingTop="@dimen/_4sdp"
+                        android:paddingStart="@dimen/_7sdp"
+                        android:paddingEnd="@dimen/_7sdp"
+                        android:paddingBottom="@dimen/_4sdp"
+                        android:paddingTop="@dimen/_4sdp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="10dp"
