@@ -80,10 +80,14 @@ class ScanActivity : AppCompatActivity() {
 
                 if (scanString != null) {
                     if (!isApiCall){
-                        isApiCall = true
-                        var userID = Integer.parseInt(scanString, 10);
-
-                        userLogin(userID)
+                        try {
+                            isApiCall = true
+                            var userID = Integer.parseInt(scanString, 10);
+                            userLogin(userID)
+                        }catch (e : Exception){
+                            isApiCall = false
+                            showMessage("Invalid QR")
+                        }
                     }
 
                 }else{
@@ -149,8 +153,13 @@ class ScanActivity : AppCompatActivity() {
                             isApiCall = true
                             Log.e("ScanData",scannedValue)
                             var userName  =   scannedValue
-                            var userID = Integer.parseInt(userName, 10);
-                            userLogin(userID)
+                            try {
+                                var userID = Integer.parseInt(userName, 10);
+                                userLogin(userID)
+                            }catch (e : Exception){
+                                showMessage("Invalid QR")
+                                isApiCall = false
+                            }
                         }
 
                     }else{
@@ -234,7 +243,7 @@ class ScanActivity : AppCompatActivity() {
                             "Something went wrong"
                         }
                         showMessage(errorMessage)
-                       // nextActivity()
+                        // nextActivity()
                         isApiCall =false
                     }
 

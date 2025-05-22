@@ -152,20 +152,29 @@ class HomeActivity : ComponentActivity() {
                 Log.e("ScanCode", "✅ Final scan: $scanString")
                 if (scanString != null) {
                     if (isScanType.equals(1)){
-                        Log.e("ScanData",scanString)
                         //   var machineID  =  scanString
-                        var machineID = parseInt(scanString, 10);
-                        scanMachine(machineID)
+                        try {
+                            var machineID = parseInt(scanString, 10);
+                            scanMachine(machineID)
+                        }catch (e : Exception){
+                            showMessage("Invalid QR")
+                        }
 
                     }
                     else if (isScanType.equals(2)){
-                        Log.e("ScanData",scanString)
-                        var machineID = parseInt(scanString, 10);
-                        scanSalesORder(machineID)
+                        try {
+                            var machineID = parseInt(scanString, 10);
+                            scanSalesORder(machineID)
+                        }catch (e : Exception){
+                            showMessage("Invalid QR")
+                        }
                     }else if (isScanType.equals(3)){
-                        Log.e("ScanData",scanString)
-                        var machineID = parseInt(scanString, 10);
-                        productDetails(machineID)
+                        try {
+                            var machineID = parseInt(scanString, 10);
+                            productDetails(machineID)
+                        }catch (e : Exception){
+                            showMessage("Invalid QR")
+                        }
                     }
                 }else{
                     showMessage("Invalid QR")
@@ -355,29 +364,43 @@ class HomeActivity : ComponentActivity() {
                         if (scanType.equals(1)){
 
                             if (!isMachineScan){
-                                isMachineScan = true
-                                Log.e("ScanData",scannedValue)
-                                var machineID = parseInt(scannedValue, 10);
-                                scanMachine(machineID)
+                                try {
+                                    isMachineScan = true
+                                    var machineID = parseInt(scannedValue, 10);
+                                    scanMachine(machineID)
+                                }catch (e : Exception){
+                                    showMessage("Invalid QR")
+                                    isMachineScan = false
+                                }
                             }
 
                         }
                         else if (scanType.equals(2)){
 
                             if (!isSalesOrderScan){
-                                isSalesOrderScan = true
-                                Log.e("ScanData",scannedValue)
-                                var machineID = parseInt(scannedValue, 10);
-                                scanSalesORder(machineID)
+                                try {
+                                    isSalesOrderScan = true
+                                    Log.e("ScanData",scannedValue)
+                                    var machineID = parseInt(scannedValue, 10);
+                                    scanSalesORder(machineID)
+                                }catch (e : Exception){
+                                    showMessage("Invalid QR")
+                                    isSalesOrderScan = false
+                                }
                             }
 
                         }else if (scanType.equals(3)){
 
                             if (!isProductScan){
-                                isProductScan = true
-                                Log.e("ScanData",scannedValue)
-                                var machineID = parseInt(scannedValue, 10);
-                                productDetails(machineID)
+                                try {
+                                    isProductScan = true
+                                    Log.e("ScanData",scannedValue)
+                                    var machineID = parseInt(scannedValue, 10);
+                                    productDetails(machineID)
+                                }catch (e : Exception){
+                                    showMessage("Invalid QR")
+                                    isProductScan = false
+                                }
                             }
                         }
                     }else{
@@ -519,7 +542,7 @@ class HomeActivity : ComponentActivity() {
                     products.addAll(newProducts)
                     adapter.notifyDataSetChanged()
                 }
-            }else if (i==2){
+            }else if (i==3){
                 // isScanType = 3;
                 rr_producDetailsView.visibility = View.VISIBLE
                 rr_productView.visibility = View.GONE
@@ -532,10 +555,18 @@ class HomeActivity : ComponentActivity() {
             rr_machineDetail.visibility = View.GONE
             tv_search.visibility = View.VISIBLE
         }
-        
+
         tv_reScan.setOnClickListener{
             rr_machineDetail.visibility = View.GONE
             tv_search.visibility = View.VISIBLE
+
+            if (i==1){
+                isMachineScan = false
+            }else if(i==2){
+                isSalesOrderScan = false
+            }else if(i==3){
+                isProductScan = false
+            }
         }
     }
 
