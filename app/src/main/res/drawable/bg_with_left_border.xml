@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Grey background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#17282e" /> <!-- Grey background -->
+        </shape>
+    </item>
+
+    <!-- Red left border -->
+    <item
+        android:width="2dp"
+        android:gravity="left">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/blue" /> <!-- Red border -->
+        </shape>
+    </item>
+
+</layer-list>

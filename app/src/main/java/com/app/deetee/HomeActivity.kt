@@ -106,6 +106,8 @@ class HomeActivity : ComponentActivity() {
     var lastInputTime: Long = 0
     val SCAN_TIMEOUT = 2000L // 1 second timeout
 
+    var machineID = 0
+    var SO_ID = 0
 
     private fun disableEditTextFocus() {
         etEnterID.clearFocus()
@@ -349,8 +351,12 @@ class HomeActivity : ComponentActivity() {
             finish()
         }
         tv_startProcess.setOnClickListener {
+
             val intent = Intent(this, StartProcessActivity::class.java)
+            intent.putExtra("machineID", machineID)
+            intent.putExtra("soId", SO_ID)
             startActivity(intent)
+
         }
     }
     private fun startCamera(scanType : Int) {
@@ -526,6 +532,8 @@ class HomeActivity : ComponentActivity() {
                 tv_machineDetail.setText(response?.body()?.data?.machine_type)
                 tv_Available.setText(response?.body()?.data?.machine_status)
                 Picasso.get().load((response?.body()?.data?.machine_image)).into(imgMachineScan)
+
+                machineID = response?.body()?.data?.id!!
             }else if (i==2){
                 isScanType = 3;
                 rr_SalesDetailsView.visibility = View.VISIBLE
@@ -533,7 +541,7 @@ class HomeActivity : ComponentActivity() {
                 tv_scanProductQR.setBackgroundResource(R.drawable.rounded_corner_button)
                 rr_product.setBackgroundResource(R.drawable.rounded_corner_white)
 
-
+                SO_ID = SOresponse?.body()?.data?.id!!
                 val data = SOresponse?.body()?.data
                 tv_machine_SoNumber.setText(SOresponse?.body()?.data?.so_no)
                 //product list adapter

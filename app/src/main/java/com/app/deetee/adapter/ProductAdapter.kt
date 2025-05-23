@@ -9,7 +9,7 @@ import com.app.deetee.R
 import com.app.deetee.model.Product
 
 
-data class ProductList(val productHeading: String, val productName: String)
+
 
 class ProductAdapter(
     private val statuses: MutableList<Product>
